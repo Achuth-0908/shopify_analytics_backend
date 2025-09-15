@@ -1,52 +1,69 @@
 require('dotenv').config();
-const { Sequelize } = require('sequelize');
-const config = require('../config/database');
+const { Sequelize, DataTypes } = require('sequelize');
 
-// Use the appropriate config for current environment
-const env = process.env.NODE_ENV || 'development';
-const dbConfig = config[env];
-
-let sequelize;
-
-if (dbConfig.use_env_variable) {
-  // For production, use DATABASE_URL
-  sequelize = new Sequelize(process.env[dbConfig.use_env_variable], dbConfig);
-} else {
-  // For development, use separate connection parameters
-  sequelize = new Sequelize(
-    dbConfig.database,
-    dbConfig.username,
-    dbConfig.password,
-    {
-      host: dbConfig.host,
-      port: dbConfig.port,
-      dialect: dbConfig.dialect,
-      logging: dbConfig.logging,
-      pool: dbConfig.pool
-    }
-  );
-}
-
-const db = {
-  sequelize,
-  Sequelize,
-  Tenant: require('./tenant')(sequelize, Sequelize),
-  Customer: require('./customer')(sequelize, Sequelize),
-  Order: require('./order')(sequelize, Sequelize),
-  Product: require('./product')(sequelize, Sequelize)
+// Map of tenants to DB URLs or connection info
+const tenants = {
+  tenant1: {
+    database: process.env.DB_NAME_1,
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+  },
+  tenant2: {
+    database: process.env.DB_NAME_2,
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+  },
 };
 
-// Define associations
-db.Tenant.hasMany(db.Customer, { foreignKey: 'tenantId', onDelete: 'CASCADE' });
-db.Tenant.hasMany(db.Order, { foreignKey: 'tenantId', onDelete: 'CASCADE' });
-db.Tenant.hasMany(db.Product, { foreignKey: 'tenantId', onDelete: 'CASCADE' });
+// Function to create Sequelize instance for a tenant
+const createSequelize = ({ database, username, password, host, port }) => {
+  return new Sequelize(database, username, password, {
+    host,
+    port,
+    dialect: 'postgres',
+    logging: false,
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000,
+    },
+  });
+};
 
-db.Customer.belongsTo(db.Tenant, { foreignKey: 'tenantId' });
-db.Customer.hasMany(db.Order, { foreignKey: 'customerId', onDelete: 'CASCADE' });
+// Initialize Sequelize instances for all tenants
+const sequelizeMap = {};
+for (const key in tenants) {
+  sequelizeMap[key] = createSequelize(tenants[key]);
+}
 
-db.Order.belongsTo(db.Tenant, { foreignKey: 'tenantId' });
-db.Order.belongsTo(db.Customer, { foreignKey: 'customerId' });
+// Function to get models for a given tenant
+const getModels = (tenantKey) => {
+  const sequelize = sequelizeMap[tenantKey];
+  const Tenant = require('./tenant')(sequelize, DataTypes);
+  const Customer = require('./customer')(sequelize, DataTypes);
+  const Order = require('./order')(sequelize, DataTypes);
+  const Product = require('./product')(sequelize, DataTypes);
 
-db.Product.belongsTo(db.Tenant, { foreignKey: 'tenantId' });
+  // Define associations
+  Tenant.hasMany(Customer, { foreignKey: 'tenantId', onDelete: 'CASCADE' });
+  Tenant.hasMany(Order, { foreignKey: 'tenantId', onDelete: 'CASCADE' });
+  Tenant.hasMany(Product, { foreignKey: 'tenantId', onDelete: 'CASCADE' });
 
-module.exports = db;
+  Customer.belongsTo(Tenant, { foreignKey: 'tenantId' });
+  Customer.hasMany(Order, { foreignKey: 'customerId', onDelete: 'CASCADE' });
+
+  Order.belongsTo(Tenant, { foreignKey: 'tenantId' });
+  Order.belongsTo(Customer, { foreignKey: 'customerId' });
+
+  Product.belongsTo(Tenant, { foreignKey: 'tenantId' });
+
+  return { sequelize, Tenant, Customer, Order, Product };
+};
+
+// Export the map and helper
+module.exports = { sequelizeMap, getModels };
