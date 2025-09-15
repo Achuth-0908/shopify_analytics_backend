@@ -4,7 +4,7 @@ module.exports = {
   development: {
     username: process.env.DB_USERNAME || 'postgres',
     password: process.env.DB_PASSWORD || '12345',
-    database: process.env.DB_NAME || 'xeno_shopify',
+    database: process.env.DB_NAME_1 || 'xeno_shopify',
     host: process.env.DB_HOST || '127.0.0.1',
     port: process.env.DB_PORT || 5432,
     dialect: 'postgres',
