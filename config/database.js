@@ -26,11 +26,11 @@ module.exports = {
       acquire: 30000,
       idle: 10000
     },
-    dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false
-      }
-    }
+    // Allow toggling SSL based on env for providers that don't require it
+    dialectOptions: (() => {
+      const sslFlag = process.env.DATABASE_SSL;
+      const enableSsl = sslFlag ? sslFlag.toLowerCase() === 'true' : true; // default true
+      return enableSsl ? { ssl: { require: true, rejectUnauthorized: false } } : {};
+    })()
   }
 };

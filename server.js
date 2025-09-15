@@ -83,13 +83,27 @@ app.use((req, res) => {
 
 const PORT = process.env.PORT || 3000;
 
-// Database connection and server start
+// Database connection (with retry) and server start
 async function startServer() {
   try {
     console.log('🔄 Starting Xeno Shopify Backend...');
     
-    // Test database connection
-    await db.sequelize.authenticate();
+    // Wait for DB to be reachable (useful on Railway cold starts)
+    const maxRetries = parseInt(process.env.DB_CONNECT_RETRIES || '10');
+    const retryDelayMs = parseInt(process.env.DB_CONNECT_RETRY_DELAY_MS || '3000');
+    let attempt = 0;
+    while (true) {
+      try {
+        attempt++;
+        console.log(`🔌 DB connect attempt ${attempt}/${maxRetries}...`);
+        await db.sequelize.authenticate();
+        break;
+      } catch (err) {
+        if (attempt >= maxRetries) throw err;
+        console.warn(`⏳ DB not ready yet: ${err.message}. Retrying in ${retryDelayMs}ms...`);
+        await new Promise(r => setTimeout(r, retryDelayMs));
+      }
+    }
     console.log('✅ Database connected successfully');
 
     // Sync database (create tables)
