@@ -1,5 +1,17 @@
-# Xeno Multi-Tenant Shopify Analytics Platform
-## Technical Documentation & Architecture Guide
+# Shopify Multi‑Tenant Analytics (Full Stack)
+
+[![Made with Next.js](https://img.shields.io/badge/Frontend-Next.js%2015-blue?logo=next.js&logoColor=white)](https://nextjs.org)
+[![Express](https://img.shields.io/badge/Backend-Express-000?logo=express&logoColor=white)](https://expressjs.com)
+[![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-4169E1?logo=postgresql&logoColor=white)](https://www.postgresql.org)
+[![Sequelize](https://img.shields.io/badge/ORM-Sequelize-52B0E7?logo=sequelize&logoColor=white)](https://sequelize.org)
+[![Vercel](https://img.shields.io/badge/Deploy-Vercel-111?logo=vercel&logoColor=white)](https://vercel.com)
+[![Railway](https://img.shields.io/badge/Deploy-Railway-0B0D0E?logo=railway&logoColor=white)](https://railway.app)
+
+<p align="center">
+  <a href="https://shopify-multi-tenant-analytics.vercel.app"><img src="https://img.shields.io/badge/Live%20Demo-Frontend-22c55e?style=for-the-badge" alt="Live Frontend" /></a>
+  <a href="https://shopifyanalytics-production.up.railway.app"><img src="https://img.shields.io/badge/Live%20API-Backend-06b6d4?style=for-the-badge" alt="Live Backend" /></a>
+  <a href="#quick-start"><img src="https://img.shields.io/badge/Quick%20Start-5%20mins-8b5cf6?style=for-the-badge" alt="Quick Start" /></a>
+</p>
 
 **Author:** G Achuth 
 **Assignment:** Xeno FDE Internship 2025  
