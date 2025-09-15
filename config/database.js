@@ -3,10 +3,10 @@ require('dotenv').config();
 module.exports = {
   development: {
     username: process.env.DB_USERNAME || 'postgres',
-    password: process.env.DB_PASSWORD || '12345',
-    database: process.env.DB_NAME_1 || 'xeno_shopify',
-    host: process.env.DB_HOST || '127.0.0.1',
-    port: process.env.DB_PORT || 5432,
+    password: process.env.DB_PASSWORD || process.env.DB_PASSWORD_2,
+    database: process.env.DB_NAME_1 || 'railway',
+    host: process.env.DB_HOST || process.env.DB_HOST_2,
+    port: process.env.DB_PORT || process.env.DB_PORT_2,
     dialect: 'postgres',
     logging: false,
     pool: {
@@ -17,7 +17,7 @@ module.exports = {
     }
   },
   production: {
-    use_env_variable: 'DATABASE_URL',
+    use_env_variable: 'DATABASE_URL' || 'DATABASE_URL_2',
     dialect: 'postgres',
     logging: false,
     pool: {
@@ -26,11 +26,11 @@ module.exports = {
       acquire: 30000,
       idle: 10000
     },
-    // Allow toggling SSL based on env for providers that don't require it
-    dialectOptions: (() => {
-      const sslFlag = process.env.DATABASE_SSL;
-      const enableSsl = sslFlag ? sslFlag.toLowerCase() === 'true' : true; // default true
-      return enableSsl ? { ssl: { require: true, rejectUnauthorized: false } } : {};
-    })()
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false
+      }
+    }
   }
 };
