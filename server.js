@@ -14,11 +14,8 @@ app.use(helmet());
 // CORS configuration for Next.js frontend
 app.use(cors({
   origin: [
-    'http://localhost:3000', // Next.js dev server
-    'http://localhost:3001', // Alternative port
     process.env.FRONTEND_URL,
-    /\.vercel\.app$/, // Vercel deployments
-    /\.netlify\.app$/, // Netlify deployments
+    /\.vercel\.app$/,
   ].filter(Boolean),
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
