@@ -460,42 +460,6 @@ npm run dev
 
 ---
 
-## One‑click Deploy Buttons
-
-Deploy the stack quickly with the buttons below. Review environment variables after the deploy wizard.
-
-### Frontend → Vercel
-
-<a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FAchuth-09084%2Fshopify-analytics-frontend&project-name=shopify-analytics-frontend&repository-name=shopify-analytics-frontend&framework=nextjs&env=NEXT_PUBLIC_API_URL,NEXT_PUBLIC_TENANT_ID" target="_blank">
-  <img src="https://vercel.com/button" alt="Deploy with Vercel" />
-</a>
-
-Environment required on Vercel:
-```
-NEXT_PUBLIC_API_URL=https://<backend-host>
-NEXT_PUBLIC_TENANT_ID=<tenant-uuid>
-```
-
-### Backend → Railway
-
-<a href="https://railway.app/new?template=https%3A%2F%2Fgithub.com%2FAchuth-0908%2Fshopify-analytics-backend&plugins=postgresql&envs=NODE_ENV,PORT,SHOPIFY_API_VERSION,FRONTEND_URL,DATABASE_SSL,DB_CONNECT_RETRIES,DB_CONNECT_RETRY_DELAY_MS&NODE_ENVDefault=production&PORTDefault=3000&SHOPIFY_API_VERSIONDefault=2024-10&DATABASE_SSLDefault=true&DB_CONNECT_RETRIESDefault=10&DB_CONNECT_RETRY_DELAY_MSDefault=3000" target="_blank">
-  <img src="https://railway.app/button.svg" alt="Deploy on Railway" />
-</a>
-
-Railway will create Postgres automatically. After deploy, set variables:
-```
-NODE_ENV=production
-PORT=3000
-DATABASE_URL=postgresql://<user>:<pass>@<host>:<port>/<db>
-DATABASE_SSL=true
-SHOPIFY_API_VERSION=2024-10
-FRONTEND_URL=https://<your-frontend>.vercel.app
-DB_CONNECT_RETRIES=10
-DB_CONNECT_RETRY_DELAY_MS=3000
-```
-
----
-
 ## Next Steps to Productionize
 
 ### Immediate (1-2 months)
