@@ -396,6 +396,106 @@ GET /api/sync/status
 
 ---
 
+## Frontend Documentation (Next.js Dashboard)
+
+<p>
+  <img src="https://img.shields.io/badge/Next.js-15-000?logo=next.js&logoColor=white" alt="Next.js" />
+  <img src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=061" alt="React" />
+  <img src="https://img.shields.io/badge/TailwindCSS-4.x-38B2AC?logo=tailwindcss&logoColor=white" alt="Tailwind" />
+  <img src="https://img.shields.io/badge/Recharts-3.x-8b5cf6" alt="Recharts" />
+  <img src="https://img.shields.io/badge/Deployed%20on-Vercel-111?logo=vercel&logoColor=white" alt="Vercel" />
+</p>
+
+### Overview
+- Modern analytics UI with metric cards, trend charts, top customers, recent orders, and product performance.
+- Multi‑tenant aware: a store selector fetches tenants and sets `x-tenant-id` for all analytics calls.
+- Built with Next.js, Tailwind CSS, and Recharts for polished UX and responsive design.
+
+### Feature Overview
+
+| Area | Features |
+| --- | --- |
+| UX & Layout | Responsive dashboard, landing page with tenant picker, animated backgrounds |
+| Analytics | Overview KPIs, revenue trends, product performance, top customers, recent orders |
+| Multi‑tenant | Store selector, automatic `x-tenant-id` header, fallback demo tenant |
+| Performance | Batched API requests, lightweight charts, memoized UI where needed |
+| DevX | `.env.local` based config, clean components, ESLint ready |
+
+### Key Files
+- `xeno-dashboard/components/XenoLandingPage.js`: Tenant discovery and entry screen
+- `xeno-dashboard/components/XenoDashboard.js`: Main analytics dashboard and all widgets
+- `xeno-dashboard/hooks/useAnalytics.js`: Example data fetching via `NEXT_PUBLIC_API_URL` and `NEXT_PUBLIC_TENANT_ID`
+
+### Frontend Environment
+Create `xeno-dashboard/.env.local`:
+```env
+NEXT_PUBLIC_API_URL=https://<backend-host>
+NEXT_PUBLIC_TENANT_ID=<tenant-uuid>
+```
+
+### How the frontend calls the backend
+```js
+// headers include tenant ID for tenant-scoped endpoints
+const headers = {
+  'x-tenant-id': process.env.NEXT_PUBLIC_TENANT_ID,
+  'Content-Type': 'application/json',
+};
+
+const base = process.env.NEXT_PUBLIC_API_URL;
+const [dashboard, customers, trends] = await Promise.all([
+  fetch(`${base}/api/analytics/dashboard`, { headers }).then(r => r.json()),
+  fetch(`${base}/api/analytics/top-customers`, { headers }).then(r => r.json()),
+  fetch(`${base}/api/analytics/revenue-trends`, { headers }).then(r => r.json()),
+]);
+```
+
+### Frontend Runbook
+```bash
+cd xeno-dashboard
+npm install
+echo NEXT_PUBLIC_API_URL=https://<backend-host> > .env.local
+echo NEXT_PUBLIC_TENANT_ID=<tenant-uuid> >> .env.local
+npm run dev
+```
+
+---
+
+## One‑click Deploy Buttons
+
+Deploy the stack quickly with the buttons below. Review environment variables after the deploy wizard.
+
+### Frontend → Vercel
+
+<a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FAchuth-09084%2Fshopify-analytics-frontend&project-name=shopify-analytics-frontend&repository-name=shopify-analytics-frontend&framework=nextjs&env=NEXT_PUBLIC_API_URL,NEXT_PUBLIC_TENANT_ID" target="_blank">
+  <img src="https://vercel.com/button" alt="Deploy with Vercel" />
+</a>
+
+Environment required on Vercel:
+```
+NEXT_PUBLIC_API_URL=https://<backend-host>
+NEXT_PUBLIC_TENANT_ID=<tenant-uuid>
+```
+
+### Backend → Railway
+
+<a href="https://railway.app/new?template=https%3A%2F%2Fgithub.com%2FAchuth-0908%2Fshopify-analytics-backend&plugins=postgresql&envs=NODE_ENV,PORT,SHOPIFY_API_VERSION,FRONTEND_URL,DATABASE_SSL,DB_CONNECT_RETRIES,DB_CONNECT_RETRY_DELAY_MS&NODE_ENVDefault=production&PORTDefault=3000&SHOPIFY_API_VERSIONDefault=2024-10&DATABASE_SSLDefault=true&DB_CONNECT_RETRIESDefault=10&DB_CONNECT_RETRY_DELAY_MSDefault=3000" target="_blank">
+  <img src="https://railway.app/button.svg" alt="Deploy on Railway" />
+</a>
+
+Railway will create Postgres automatically. After deploy, set variables:
+```
+NODE_ENV=production
+PORT=3000
+DATABASE_URL=postgresql://<user>:<pass>@<host>:<port>/<db>
+DATABASE_SSL=true
+SHOPIFY_API_VERSION=2024-10
+FRONTEND_URL=https://<your-frontend>.vercel.app
+DB_CONNECT_RETRIES=10
+DB_CONNECT_RETRY_DELAY_MS=3000
+```
+
+---
+
 ## Next Steps to Productionize
 
 ### Immediate (1-2 months)
