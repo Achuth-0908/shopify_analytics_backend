@@ -13,10 +13,7 @@ app.use(helmet());
 
 // CORS configuration for Next.js frontend
 app.use(cors({
-  origin: [
-    process.env.FRONTEND_URL,
-    /\.vercel\.app$/,
-  ].filter(Boolean),
+  origin: process.env.FRONTEND_URL?.replace(/\/$/, ""),
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'x-tenant-id']
