@@ -4,7 +4,7 @@
   "description": "Shopify data ingestion service for Xeno FDE internship",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "nodemon server.js",
     "dev": "nodemon server.js",
     "sync": "node scripts/syncShopifyData.js",
     "seed": "node scripts/seedDemoData.js",
