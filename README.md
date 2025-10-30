@@ -13,8 +13,7 @@
   <a href="#quick-start"><img src="https://img.shields.io/badge/Quick%20Start-5%20mins-8b5cf6?style=for-the-badge" alt="Quick Start" /></a>
 </p>
 
-**Author:** G Achuth 
-**Assignment:** Xeno FDE Internship 2025  
+**Author:** G Achuth   
 **Repository:** [Backend](https://github.com/Achuth-0908/shopify-analytics-backend) | [Frontend](https://github.com/Achuth-09084/shopify-analytics-frontend)  
 **Live Demo:** [Frontend URL](https://shopify-multi-tenant-analytics.vercel.app) | [Backend API](shopifyanalytics-production.up.railway.app)
 
